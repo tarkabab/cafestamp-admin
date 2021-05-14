@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "915410378110",
+    "project_id": "coffestamp-37239",
+    "storage_bucket": "coffestamp-37239.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915410378110:android:40874aae2bc8ea7216e72f",
+        "android_client_info": {
+          "package_name": "hu.molylepke.coffeestamp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "915410378110-tdpv819fpnqp01otdit4pen694r8ofl1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcOxt7Q02ufLXYMzosZe_PSbvu3fXek2g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "915410378110-tdpv819fpnqp01otdit4pen694r8ofl1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
