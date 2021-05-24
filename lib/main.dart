@@ -1,4 +1,5 @@
 import 'package:coffee_admin/auth.dart';
+import 'package:coffee_admin/customer.dart';
 import 'package:coffee_admin/customer_page.dart';
 import 'package:coffee_admin/scanner_page.dart';
 import 'package:coffee_admin/statistics_page.dart';
@@ -22,6 +23,7 @@ class CoffeeStampsAdmin extends StatelessWidget {
       providers: [
         Provider<AuthService>(create: (_) => AuthService()),
         Provider<FirestoreService>(create: (_) => FirestoreService()),
+        ChangeNotifierProvider<CustomerBloc>.value(value: CustomerBloc()),
         StreamProvider(
           create: (context) => context.read<AuthService>().authStateChanges,
           initialData: null,

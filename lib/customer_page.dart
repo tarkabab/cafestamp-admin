@@ -1,7 +1,6 @@
+import 'package:coffee_admin/customer.dart';
 import 'package:coffee_admin/firestore_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +10,9 @@ class CustomerPage extends StatefulWidget {
 }
 
 class CustomerPageState extends State<CustomerPage> {
-  final String customerId = "";
+  final String customerId = "Y2ChCUGNl6LGvcT6YHs0";
+  int count = 3;
+  int sum = 13;
 
   @override
   void initState() {
@@ -29,39 +30,24 @@ class CustomerPageState extends State<CustomerPage> {
           height: 30,
         ),
         CustomerCard(),
-        stampsControl(),
-        Card(
-          elevation: 4,
-          margin: EdgeInsets.all(20),
-          child: Text(
-              "Vendég: ${customer.displayName} Aktuális bélyegek: ${customer.numberOfStamps} Összes bélyeg: ${customer.sumNumberOfStamps}"),
-        ),
-        Card(
-          child: Text("${DateFormat.yMMMM('hu').format(DateTime(2021, 1, 3))}"),
-        ),
-        ...customer.visits
-            .map(
-              (stampsPerDay) => Card(
-                child: Text(
-                    "${DateFormat.yMMMMd('hu').format(stampsPerDay.date)}: ${stampsPerDay.count} pecsét"),
-              ),
-            )
-            .toList(),
+        Controls(),
       ],
     );
   }
 }
 
-class CustomerCard extends StatelessWidget {
+class CustomerCard extends StatefulWidget {
+  @override
+  _CustomerCardState createState() => _CustomerCardState();
+}
+
+class _CustomerCardState extends State<CustomerCard> {
   @override
   Widget build(BuildContext context) {
+    final customerBloc = Provider.of<CustomerBloc>(context);
+
     return Container(
       decoration: BoxDecoration(
-        // border: Border.all(
-        //   color: Colors.black,
-        //   width: 5,
-        // ),
-        // borderRadius: BorderRadius.circular(30),
         image: DecorationImage(
             image: AssetImage("assets/images/boxes.jpeg"), fit: BoxFit.fill),
       ),
@@ -69,7 +55,7 @@ class CustomerCard extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            "Peter",
+            "Péter",
             style: TextStyle(
               fontSize: 35,
               fontWeight: FontWeight.bold,
@@ -79,7 +65,7 @@ class CustomerCard extends StatelessWidget {
           Spacer(),
           //SizedBox(            width: 120,          ),
           Text(
-            "3 / 13",
+            "${customerBloc.customer.numberOfStamps} / ${customerBloc.customer.sumNumberOfStamps}",
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
@@ -92,96 +78,82 @@ class CustomerCard extends StatelessWidget {
   }
 }
 
-final textController = TextEditingController(text: "1");
+class Controls extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ControlsState();
+}
 
-Widget stampsControl() => Padding(
-      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+class _ControlsState extends State<Controls> {
+  int _count = 1;
+  @override
+  Widget build(BuildContext context) {
+    final customerBloc = Provider.of<CustomerBloc>(context);
+    return Padding(
+      padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          //SizedBox(            width: 100,          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: textController,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                ],
-                textAlign: TextAlign.end,
-                maxLines: 1,
-              ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: addButton(Icons.add, () => setState(() => {_count++})),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: Text(
+              "$_count",
+              style: TextStyle(fontSize: 30),
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-            child: IconButton(
-              onPressed: () {
-                print('Add was pressed ...');
-              },
-              icon: Icon(
-                Icons.add,
-                color: Colors.black,
-                size: 30,
-              ),
-              iconSize: 40,
-            ),
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: addButton(Icons.remove, () => setState(() => {_count--})),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-            child: IconButton(
-              onPressed: () {
-                print('Remove was pressed ...');
-              },
-              icon: Icon(
-                Icons.remove,
-                color: Colors.black,
-                size: 30,
-              ),
-              iconSize: 30,
-            ),
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: addButton(
+                Icons.check, () => setState(() => {customerBloc.add(_count)})),
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(15, 0, 20, 0),
-            child: IconButton(
-              onPressed: () {
-                print('Commit was pressed ...');
-              },
-              icon: Icon(
-                Icons.check_outlined,
-                color: Colors.black,
-                size: 30,
-              ),
-              iconSize: 30,
-            ),
-          ),
-          //addButton(Icons.check),
         ],
       ),
     );
+  }
+}
 
-Widget addButton(IconData iconData) => ElevatedButton(
-      onPressed: () {},
+Widget addButton(IconData iconData, void Function() onPressed) =>
+    ElevatedButton(
+      onPressed: onPressed,
       child: Icon(
         iconData,
         color: Colors.white,
-        size: 40,
+        size: 30,
       ),
-      style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-    );
-
-Widget buttonStyle1() => ElevatedButton(
-      onPressed: () {},
-      child: Text('Button'),
       style: ElevatedButton.styleFrom(
         shape: CircleBorder(),
-        padding: EdgeInsets.all(24),
+        padding: EdgeInsets.all(15),
       ),
     );
 
-Widget buttonStyle2() => ElevatedButton(
-      onPressed: () {},
-      child: Text('Button'),
-      style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-    );
+// Widget circleButton() => ElevatedButton(
+//       onPressed: () {},
+//       child: Text('Button'),
+//       style: ElevatedButton.styleFrom(
+//         shape: CircleBorder(),
+//         padding: EdgeInsets.all(15),
+//       ),
+//     );
+
+// Widget roundedButton() => ElevatedButton(
+//       onPressed: () {},
+//       child: Text('Button'),
+//       style: ElevatedButton.styleFrom(shape: StadiumBorder()),
+//     );
+
+// Widget iconButton() => IconButton(
+//       onPressed: () {},
+//       icon: Icon(
+//         Icons.check,
+//         color: Colors.black,
+//         size: 30,
+//       ),
+//       iconSize: 30,
+//     );
