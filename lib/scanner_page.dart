@@ -17,7 +17,7 @@ class _ScannerPageState extends State<ScannerPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text('scan result',
+          Text('Scan Result',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.white54,
@@ -26,7 +26,7 @@ class _ScannerPageState extends State<ScannerPage> {
           SizedBox(
             height: 8,
           ),
-          Text('BARCODE',
+          Text('$barcode',
               style: TextStyle(
                 fontSize: 28,
                 color: Colors.white,

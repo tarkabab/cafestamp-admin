@@ -10,7 +10,7 @@ class AuthenticationWrapper extends StatelessWidget {
     final user = context.watch<User?>();
     if (user != null) {
       //context.read<AuthService>().logout();
-      return LandingPage(title: "Coffee Stamps Admin");
+      return LandingPage();
     } else
       return LoginPage();
   }
