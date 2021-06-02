@@ -3,11 +3,16 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class ScannerPage extends StatefulWidget {
   @override
-  _ScannerPageState createState() => _ScannerPageState();
+  _ScannerPageState createState() => _ScannerPageState(callback: () => null);
 }
 
+// TODO: successful scan, valid customer id => customer_page
+// scan cancelled, error, invalid customer id => display message
 class _ScannerPageState extends State<ScannerPage> {
   String barcode = 'no data';
+  Function callback;
+
+  _ScannerPageState({required this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +61,8 @@ class _ScannerPageState extends State<ScannerPage> {
 
       setState(() {
         this.barcode = barcode;
+        // TODO: add navigation callback to scanpage
+        DefaultTabController.of(context)?.animateTo(1);
       });
     } catch (error) {
       print(error.runtimeType);

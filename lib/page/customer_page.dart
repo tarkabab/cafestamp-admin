@@ -1,5 +1,4 @@
-import 'package:coffee_admin/customer.dart';
-import 'package:coffee_admin/firestore_service.dart';
+import 'package:coffee_admin/model/customer.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +21,8 @@ class CustomerPageState extends State<CustomerPage> {
 
   @override
   Widget build(BuildContext context) {
-    final customer = context.read<FirestoreService>().getCustomer(customerId);
-
+    //final customer = context.read<FirestoreService>().getCustomer(customerId);
+    //final customer2 = context.read<FirestoreService>().getCustomer2(customerId);
     return ListView(
       children: [
         SizedBox(
@@ -46,35 +45,43 @@ class _CustomerCardState extends State<CustomerCard> {
   Widget build(BuildContext context) {
     final customerBloc = Provider.of<CustomerBloc>(context);
 
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage("assets/images/boxes.jpeg"), fit: BoxFit.fill),
-      ),
-      padding: EdgeInsets.symmetric(vertical: 50, horizontal: 50),
-      child: Row(
-        children: [
-          Text(
-            "Péter",
-            style: TextStyle(
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
-              color: Color(0xff3aa173),
+    if (customerBloc.customer != null)
+      return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/boxes.jpeg"), fit: BoxFit.fill),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 50, horizontal: 50),
+        child: Row(
+          children: [
+            Text(
+              "Péter",
+              style: TextStyle(
+                fontSize: 35,
+                fontWeight: FontWeight.bold,
+                color: Color(0xff3aa173),
+              ),
             ),
-          ),
-          Spacer(),
-          //SizedBox(            width: 120,          ),
-          Text(
-            "${customerBloc.customer.numberOfStamps} / ${customerBloc.customer.sumNumberOfStamps}",
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: Color(0xffe8c031),
+            Spacer(),
+            //SizedBox(            width: 120,          ),
+            Text(
+              "${customerBloc.customer!.numberOfStamps} / ${customerBloc.customer!.sumNumberOfStamps}",
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Color(0xffe8c031),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    else
+      return Center(
+        child: Text(
+          "Customer not found!",
+          style: TextStyle(fontSize: 20),
+        ),
+      );
   }
 }
 

@@ -22,8 +22,6 @@
 
 ## Next Steps
 
-- add stamps management to customer data: add stamp(s), exchange stamps to free coffee
-- load customers from db
 - add new user
 - send notification
 - connect scanner to load user, forward to ustomer page
@@ -31,6 +29,7 @@
 - subscribe customer
 - display date on statistic page
 - add previous messages to messaging page
+- deploy to ipad
 
 ## Build
 

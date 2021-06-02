@@ -1,15 +1,15 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coffee_admin/stamp.dart';
+import 'package:coffee_admin/model/stamp.dart';
 
-import 'customer.dart';
+import '../model/customer.dart';
 
 class FirestoreService {
-  final server = FirebaseFirestore.instance;
+  final _firestore = FirebaseFirestore.instance;
 
   Future<String> getName() async {
     final id = "GAoIEEousD3AeXeomZTC";
-    final String name = await server
+    final String name = await _firestore
         .doc('coffeeshops/$id')
         .get()
         .then((snapshot) => snapshot.get('name'));
@@ -17,6 +17,28 @@ class FirestoreService {
   }
 
   Customer getCustomer(String customerId) => _customer_1;
+
+  Future<Customer?> getCustomer2(String customerId) async {
+    final coffeeshopId = "GAoIEEousD3AeXeomZTC";
+    final customerId = "Y2ChCUGNl6LGvcT6YHs0";
+    final path = "/coffeeshops/$coffeeshopId/customers/$customerId";
+    final snapshot = await _firestore.doc(path).get();
+    if (snapshot.exists) {
+      final customer = Customer.fromMap(snapshot.data()!, customerId);
+      return customer;
+    } else
+      return null;
+  }
+
+  void save(Customer customer) async {
+    final coffeeshopId = "GAoIEEousD3AeXeomZTC";
+    final customerId = "Y2ChCUGNl6LGvcT6YHs0";
+    final path = "/coffeeshops/$coffeeshopId/customers/$customerId";
+    await _firestore.doc(path).update({
+      'numberOfStamps': customer.numberOfStamps,
+      'sumNumberOfStamps': customer.sumNumberOfStamps
+    });
+  }
 
   List<Stamp> getCoffeeshopStampsHistory() => _coffeeshopStampsHistory;
 }
