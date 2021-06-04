@@ -3,7 +3,7 @@ import 'package:coffee_admin/model/customer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:coffee_admin/page/authentication_wrapper.dart';
+import 'package:coffee_admin/ui/authentication_wrapper.dart';
 import 'package:coffee_admin/service/firestore_service.dart';
 
 void main() async {

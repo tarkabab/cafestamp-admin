@@ -1,5 +1,5 @@
-import 'package:coffee_admin/page/landing_page.dart';
-import 'package:coffee_admin/page/login_page.dart';
+import 'package:coffee_admin/ui/landing_page.dart';
+import 'package:coffee_admin/ui/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -1,7 +1,7 @@
-import 'package:coffee_admin/page/scanner_page.dart';
-import 'package:coffee_admin/page/statistics_page.dart';
-import 'package:coffee_admin/page/customer_page.dart';
-import 'package:coffee_admin/page/messaging_page.dart';
+import 'package:coffee_admin/ui/scanner_page.dart';
+import 'package:coffee_admin/ui/statistics_page.dart';
+import 'package:coffee_admin/ui/customer_page.dart';
+import 'package:coffee_admin/ui/messaging_page.dart';
 import 'package:coffee_admin/service/auth.dart';
 import 'package:coffee_admin/service/firestore_service.dart';
 import 'package:flutter/material.dart';
