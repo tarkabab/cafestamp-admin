@@ -1,7 +1,6 @@
 import 'package:coffee_admin/model/stamp.dart';
 import 'package:flutter/material.dart';
-
-import '../service/firestore_service.dart';
+import 'package:coffee_admin/service/firestore_service.dart';
 
 class Customer {
   final String id;
@@ -31,25 +30,27 @@ class Customer {
       : assert(map['displayName'] != null),
         assert(map['numberOfStamps'] != null),
         assert(map['sumNumberOfStamps'] != null),
-        //assert(map['visits'] != null),
         id = id,
         displayName = map['displayName'],
         numberOfStamps = map['numberOfStamps'],
         sumNumberOfStamps = map['sumNumberOfStamps'],
-        visits = map['visits'] ?? [];
-}
+        visits = [];
+  // TODO: map visits: map['visits'].map((data) => Stamp.fromMap(data)).toList() ?? [];
 
-//Customer _customer1 = Customer("id_0", "Péter", 3, 13, []);
+  Map<String, dynamic> toMap() => {
+        "displayName": displayName,
+        "numberOfStamps": numberOfStamps,
+        "sumNumberOfStamps": sumNumberOfStamps,
+        "visits": [],
+      };
+}
 
 class CustomerBloc extends ChangeNotifier {
   Customer? _customer;
 
   final FirestoreService firestore;
-  CustomerBloc(this.firestore) {
-    firestore.getCustomer2("customerId").then((customer) {
-      _customer = customer;
-    });
-  }
+
+  CustomerBloc(this.firestore);
 
   Customer? get customer => _customer;
 
@@ -58,7 +59,7 @@ class CustomerBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  void add(int number) {
+  void add(String shopId, int number) {
     print("customer: $_customer");
     if (_customer == null) return;
     _customer = _customer!.copyWith(
@@ -66,7 +67,7 @@ class CustomerBloc extends ChangeNotifier {
         sumNumberOfStamps: number > 0
             ? _customer!.sumNumberOfStamps + number
             : _customer!.sumNumberOfStamps);
-    firestore.save(_customer!);
+    firestore.updateCustomer(shopId, _customer!);
     notifyListeners();
   }
 }

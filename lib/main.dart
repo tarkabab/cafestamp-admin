@@ -1,3 +1,4 @@
+import 'package:coffee_admin/model/shop.dart';
 import 'package:coffee_admin/service/auth.dart';
 import 'package:coffee_admin/model/customer.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,6 +24,9 @@ class CoffeeStampsAdmin extends StatelessWidget {
         Provider<FirestoreService>(create: (_) => firestoreService),
         ChangeNotifierProvider<CustomerBloc>.value(
           value: CustomerBloc(firestoreService),
+        ),
+        ChangeNotifierProvider<ShopBloc>.value(
+          value: ShopBloc(firestoreService),
         ),
         StreamProvider(
           create: (_) => authService.authStateChanges,

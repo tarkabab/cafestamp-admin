@@ -22,14 +22,7 @@
 
 ## Next Steps
 
-- add new user
-- send notification
-- connect scanner to load user, forward to ustomer page
-- subscribe shop
-- subscribe customer
-- display date on statistic page
-- add previous messages to messaging page
-- deploy to ipad
+- basic validation of user scanned ie: customer-afk7000
 
 ## Build
 

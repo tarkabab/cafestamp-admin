@@ -1,9 +1,9 @@
+import 'package:coffee_admin/model/shop.dart';
 import 'package:coffee_admin/ui/scanner_page.dart';
 import 'package:coffee_admin/ui/statistics_page.dart';
 import 'package:coffee_admin/ui/customer_page.dart';
 import 'package:coffee_admin/ui/messaging_page.dart';
 import 'package:coffee_admin/service/auth.dart';
-import 'package:coffee_admin/service/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,20 +32,13 @@ class _LandingPageState extends State<LandingPage>
     TabDescriptor("Statistics", StatisticsPage()),
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    final _firestore = Provider.of<FirestoreService>(context, listen: false);
-    _firestore.getName().then((name) => setState(() {
-          title = name;
-        }));
-  }
-
   // TODO: add navigation callback to scanpage
   Function successfulScanCallback = () => null;
 
   @override
   Widget build(BuildContext context) {
+    final shopBloc = Provider.of<ShopBloc>(context, listen: true);
+
     return DefaultTabController(
       length: tabs.length,
       child: Builder(
@@ -58,7 +51,9 @@ class _LandingPageState extends State<LandingPage>
                   children: [
                     Flexible(
                       child: Text(
-                        title,
+                        shopBloc.shop != null
+                            ? shopBloc.shop!.name
+                            : "Unknown Shop",
                         maxLines: 1,
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,

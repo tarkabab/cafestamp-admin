@@ -1,3 +1,4 @@
+import 'package:coffee_admin/model/shop.dart';
 import 'package:coffee_admin/model/customer.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -9,10 +10,6 @@ class CustomerPage extends StatefulWidget {
 }
 
 class CustomerPageState extends State<CustomerPage> {
-  final String customerId = "Y2ChCUGNl6LGvcT6YHs0";
-  int count = 3;
-  int sum = 13;
-
   @override
   void initState() {
     super.initState();
@@ -21,8 +18,6 @@ class CustomerPageState extends State<CustomerPage> {
 
   @override
   Widget build(BuildContext context) {
-    //final customer = context.read<FirestoreService>().getCustomer(customerId);
-    //final customer2 = context.read<FirestoreService>().getCustomer2(customerId);
     return ListView(
       children: [
         SizedBox(
@@ -45,7 +40,14 @@ class _CustomerCardState extends State<CustomerCard> {
   Widget build(BuildContext context) {
     final customerBloc = Provider.of<CustomerBloc>(context);
 
-    if (customerBloc.customer != null)
+    if (customerBloc.customer == null) {
+      return Center(
+        child: Text(
+          "Customer not found!",
+          style: TextStyle(fontSize: 20),
+        ),
+      );
+    } else {
       return Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -75,13 +77,7 @@ class _CustomerCardState extends State<CustomerCard> {
           ],
         ),
       );
-    else
-      return Center(
-        child: Text(
-          "Customer not found!",
-          style: TextStyle(fontSize: 20),
-        ),
-      );
+    }
   }
 }
 
@@ -94,35 +90,40 @@ class _ControlsState extends State<Controls> {
   int _count = 1;
   @override
   Widget build(BuildContext context) {
-    final customerBloc = Provider.of<CustomerBloc>(context);
-    return Padding(
-      padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: addButton(Icons.add, () => setState(() => {_count++})),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: Text(
-              "$_count",
-              style: TextStyle(fontSize: 30),
+    final customerBloc = Provider.of<CustomerBloc>(context, listen: false);
+    final shopBloc = Provider.of<ShopBloc>(context, listen: false);
+    if (customerBloc.customer == null) {
+      return Container();
+    } else {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: addButton(Icons.add, () => setState(() => {_count++})),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: addButton(Icons.remove, () => setState(() => {_count--})),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: addButton(
-                Icons.check, () => setState(() => {customerBloc.add(_count)})),
-          ),
-        ],
-      ),
-    );
+            Padding(
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: Text(
+                "$_count",
+                style: TextStyle(fontSize: 30),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: addButton(Icons.remove, () => setState(() => {_count--})),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: addButton(Icons.check,
+                  () => customerBloc.add(shopBloc.shop!.id, _count)),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
 
@@ -139,28 +140,3 @@ Widget addButton(IconData iconData, void Function() onPressed) =>
         padding: EdgeInsets.all(15),
       ),
     );
-
-// Widget circleButton() => ElevatedButton(
-//       onPressed: () {},
-//       child: Text('Button'),
-//       style: ElevatedButton.styleFrom(
-//         shape: CircleBorder(),
-//         padding: EdgeInsets.all(15),
-//       ),
-//     );
-
-// Widget roundedButton() => ElevatedButton(
-//       onPressed: () {},
-//       child: Text('Button'),
-//       style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-//     );
-
-// Widget iconButton() => IconButton(
-//       onPressed: () {},
-//       icon: Icon(
-//         Icons.check,
-//         color: Colors.black,
-//         size: 30,
-//       ),
-//       iconSize: 30,
-//     );

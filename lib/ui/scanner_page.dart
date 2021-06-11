@@ -1,5 +1,9 @@
+import 'package:coffee_admin/model/customer.dart';
+import 'package:coffee_admin/model/shop.dart';
+import 'package:coffee_admin/service/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:provider/provider.dart';
 
 class ScannerPage extends StatefulWidget {
   @override
@@ -46,26 +50,42 @@ class _ScannerPageState extends State<ScannerPage> {
                 style: new TextStyle(fontSize: 20.0, color: Colors.white),
               ),
               onPressed: () {
-                scanBarcode();
+                scanBarcode(context);
               }),
         ],
       ),
     );
   }
 
-  Future<void> scanBarcode() async {
+  Future<void> scanBarcode(BuildContext context) async {
     try {
-      final barcode = await FlutterBarcodeScanner.scanBarcode(
+      final scanResult = await FlutterBarcodeScanner.scanBarcode(
           "#FF6666", "Cancel", false, ScanMode.QR);
+      print("barcode: $scanResult");
+
       if (!mounted) return;
 
       setState(() {
-        this.barcode = barcode;
-        // TODO: add navigation callback to scanpage
-        DefaultTabController.of(context)?.animateTo(1);
+        print("barcode scanned");
+        barcode = "Y2ChCUGNl6LGvcT6YHs0";
+        //TODO: barcode = scanResult;
+
+        final firestore = Provider.of<FirestoreService>(context, listen: false);
+        final customerBloc = Provider.of<CustomerBloc>(context, listen: false);
+        final shopBloc = Provider.of<ShopBloc>(context, listen: false);
+        print("shop id: ${shopBloc.shop!.id}");
+        print("customer id: $barcode");
+        firestore.getCustomer(shopBloc.shop!.id, barcode).then((customer) {
+          print("get customer: $customer");
+          customerBloc.customer = customer;
+          // TODO: add navigation callback to scanpage
+          DefaultTabController.of(context)?.animateTo(1);
+        });
       });
     } catch (error) {
+      print("barcode scan error");
       print(error.runtimeType);
+      print(error.toString());
       return null;
     }
   }

@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_admin/model/shop.dart';
 import 'package:coffee_admin/model/stamp.dart';
 
 import '../model/customer.dart';
@@ -7,33 +8,27 @@ import '../model/customer.dart';
 class FirestoreService {
   final _firestore = FirebaseFirestore.instance;
 
-  Future<String> getName() async {
-    final id = "GAoIEEousD3AeXeomZTC";
-    final String name = await _firestore
-        .doc('coffeeshops/$id')
-        .get()
-        .then((snapshot) => snapshot.get('name'));
-    return name;
+  Future<void> saveShop(Shop shop) async {
+    await _firestore.collection("coffeeshop").add(shop.toMap());
   }
 
-  Customer getCustomer(String customerId) => _customer_1;
-
-  Future<Customer?> getCustomer2(String customerId) async {
-    final coffeeshopId = "GAoIEEousD3AeXeomZTC";
-    final customerId = "Y2ChCUGNl6LGvcT6YHs0";
-    final path = "/coffeeshops/$coffeeshopId/customers/$customerId";
+  Future<Customer?> getCustomer(String shopId, String customerId) async {
+    final path = "/coffeeshop/$shopId/customer/$customerId";
     final snapshot = await _firestore.doc(path).get();
     if (snapshot.exists) {
       final customer = Customer.fromMap(snapshot.data()!, customerId);
       return customer;
-    } else
-      return null;
+    } else {
+      // TODO: get name from customer data
+      final name = "Peter";
+      final customer = Customer(customerId, name, 0, 0, []);
+      _firestore.doc(path).set(customer.toMap());
+      return customer;
+    }
   }
 
-  void save(Customer customer) async {
-    final coffeeshopId = "GAoIEEousD3AeXeomZTC";
-    final customerId = "Y2ChCUGNl6LGvcT6YHs0";
-    final path = "/coffeeshops/$coffeeshopId/customers/$customerId";
+  void updateCustomer(String shopId, Customer customer) async {
+    final path = "/coffeeshop/$shopId/customer/${customer.id}";
     await _firestore.doc(path).update({
       'numberOfStamps': customer.numberOfStamps,
       'sumNumberOfStamps': customer.sumNumberOfStamps
@@ -42,9 +37,6 @@ class FirestoreService {
 
   List<Stamp> getCoffeeshopStampsHistory() => _coffeeshopStampsHistory;
 }
-
-final _customer_1 =
-    Customer("customer-001", "Péter", 3, 13, customerStampHistory);
 
 List<Stamp> customerStampHistory = [
   Stamp(DateTime(2021, 1, 3), 1),
@@ -70,37 +62,3 @@ final List<Stamp> _coffeeshopStampsHistory = List<Stamp>.generate(
     20 + _random.nextInt(50),
   ),
 );
-
-// final server = FirebaseFirestore.instance
-//     .collection('demos/liszt/citizens')
-//     .snapshots()
-//     .map((documents) => {
-//           documents.docChanges.map((change) => {
-//                 if (change.type == DocumentChangeType.added)
-//                   {
-//                     Citizen.def(
-//                         change.doc.get('id'),
-//                         change.doc.get('name').split(' ')?.elementAt(0),
-//                         change.doc.get('name').split(' ')?.elementAt(1),
-//                         LatLng(change.doc.get('at').latitude,
-//                             change.doc.get('at').longitude))
-//                     // add citizen
-//                   }
-//                 else if (change.type == DocumentChangeType.removed)
-//                   {
-//                     change.doc['id']
-//                     // remove citizen
-//                   }
-//                 else if (change.type == DocumentChangeType.modified)
-//                   {
-//                     // update citizen - do nothing
-//                     change.doc['id']
-//                   }
-//               }),
-//           documents.docs.map((doc) => Citizen.def(
-//                 doc.get('id'),
-//                 doc.get('name').split(' ')?.elementAt(0),
-//                 doc.get('name').split(' ')?.elementAt(1),
-//                 LatLng(doc.get('at').latitude, doc.get('at').longitude),
-//               ))
-//         });
