@@ -8,30 +8,41 @@ import '../model/customer.dart';
 class FirestoreService {
   final _firestore = FirebaseFirestore.instance;
 
-  Future<void> saveShop(Shop shop) async {
-    await _firestore.collection("coffeeshop").add(shop.toMap());
+  void saveShop(Shop shop) {
+    _firestore.doc("coffeeshops/${shop.id}").set(shop.toMap());
   }
 
   Future<Customer?> getCustomer(String shopId, String customerId) async {
-    final path = "/coffeeshop/$shopId/customer/$customerId";
+    final path = "/coffeeshops/$shopId/customers/$customerId";
     final snapshot = await _firestore.doc(path).get();
     if (snapshot.exists) {
       final customer = Customer.fromMap(snapshot.data()!, customerId);
       return customer;
     } else {
-      // TODO: get name from customer data
-      final name = "Peter";
-      final customer = Customer(customerId, name, 0, 0, []);
-      _firestore.doc(path).set(customer.toMap());
-      return customer;
+      final customerPath = "/customers/$customerId";
+      final customerSnapshot = await _firestore.doc(customerPath).get();
+      if (customerSnapshot.exists) {
+        final customer =
+            Customer(customerId, customerSnapshot['name'], 0, 0, []);
+        _firestore.doc(path).set(customer.toMap());
+        return customer;
+      } else {
+        return null;
+      }
     }
   }
 
-  void updateCustomer(String shopId, Customer customer) async {
-    final path = "/coffeeshop/$shopId/customer/${customer.id}";
-    await _firestore.doc(path).update({
-      'numberOfStamps': customer.numberOfStamps,
-      'sumNumberOfStamps': customer.sumNumberOfStamps
+  void updateCustomer(Shop shop, Customer customer) {
+    final customerByShopPath =
+        "/coffeeshops/${shop.id}/customers/${customer.id}";
+    _firestore.doc(customerByShopPath).update(
+        {'numberOfStamps': customer.count, 'sumNumberOfStamps': customer.sum});
+    final shopByCustomerPath = "/customers/${customer.id}/shops/${shop.id}";
+    // id, name, count
+    _firestore.doc(shopByCustomerPath).set({
+      'id': shop.id,
+      'name': shop.name,
+      'count': customer.count,
     });
   }
 

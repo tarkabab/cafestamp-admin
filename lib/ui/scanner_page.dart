@@ -67,8 +67,8 @@ class _ScannerPageState extends State<ScannerPage> {
 
       setState(() {
         print("barcode scanned");
-        barcode = "Y2ChCUGNl6LGvcT6YHs0";
-        //TODO: barcode = scanResult;
+        // barcode = "P80fPGlPk5bh7wrCOUgxHDV1nPC3";
+        barcode = scanResult;
 
         final firestore = Provider.of<FirestoreService>(context, listen: false);
         final customerBloc = Provider.of<CustomerBloc>(context, listen: false);

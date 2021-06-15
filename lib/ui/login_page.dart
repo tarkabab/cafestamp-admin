@@ -15,6 +15,23 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
   bool _isLogin = true;
 
+  void setupShop(BuildContext context) {
+    final authService = context.read<AuthService>();
+    final firestoreService = context.read<FirestoreService>();
+
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    authService
+        .register(email: email, password: password)
+        .then((userCredentials) {
+      final String shopId = userCredentials!.user!.uid;
+      final String shopName = userNameController.value.text.trim();
+      final shop = Shop(shopId, shopName, []);
+      firestoreService.saveShop(shop);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> _register = [
@@ -38,22 +55,7 @@ class _LoginPageState extends State<LoginPage> {
       SizedBox(height: 40),
       ElevatedButton(
         style: ElevatedButton.styleFrom(primary: Colors.deepOrangeAccent),
-        onPressed: () {
-          final authService = context.read<AuthService>();
-          final firestoreService = context.read<FirestoreService>();
-
-          final email = emailController.text.trim();
-          final password = passwordController.text.trim();
-
-          authService
-              .register(email: email, password: password)
-              .then((userCredentials) {
-            final String shopId = userCredentials!.user!.uid;
-            final String shopName = userNameController.value.text.trim();
-            final shop = Shop(shopId, shopName);
-            firestoreService.saveShop(shop);
-          });
-        },
+        onPressed: () => setupShop(context),
         child: Text("Register"),
       ),
     ];
@@ -86,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     ];
 
-    List<Widget> _selector = [
+    List<Widget> _loginOrRegisterSelector = [
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -127,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 40),
               Icon(Icons.account_circle, size: 70),
               SizedBox(height: 40),
-              ..._selector,
+              ..._loginOrRegisterSelector,
               SizedBox(height: 40),
               if (_isLogin) ..._login else ..._register,
             ],

@@ -14,15 +14,14 @@ class AuthenticationWrapper extends StatelessWidget {
 
     if (user != null) {
       FirebaseFirestore.instance
-          .collection('coffeeshop')
-          .where('id', isEqualTo: user.uid)
+          .doc('/coffeeshops/${user.uid}')
           .get()
-          .then((snapshots) {
-        final doc = snapshots.docs.first;
-        shopBloc.shop = Shop.fromMap(doc.id, doc.data());
+          .then((snapshot) {
+        shopBloc.shop = Shop.fromMap(user.uid, snapshot.data()!);
       });
       return LandingPage();
-    } else
+    } else {
       return LoginPage();
+    }
   }
 }

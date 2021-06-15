@@ -57,7 +57,7 @@ class _CustomerCardState extends State<CustomerCard> {
         child: Row(
           children: [
             Text(
-              "Péter",
+              customerBloc.customer!.name,
               style: TextStyle(
                 fontSize: 35,
                 fontWeight: FontWeight.bold,
@@ -67,7 +67,7 @@ class _CustomerCardState extends State<CustomerCard> {
             Spacer(),
             //SizedBox(            width: 120,          ),
             Text(
-              "${customerBloc.customer!.numberOfStamps} / ${customerBloc.customer!.sumNumberOfStamps}",
+              "${customerBloc.customer!.count} / ${customerBloc.customer!.sum}",
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
@@ -117,8 +117,8 @@ class _ControlsState extends State<Controls> {
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: addButton(Icons.check,
-                  () => customerBloc.add(shopBloc.shop!.id, _count)),
+              child: addButton(
+                  Icons.check, () => customerBloc.add(shopBloc.shop!, _count)),
             ),
           ],
         ),
