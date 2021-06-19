@@ -1,6 +1,8 @@
 import 'package:coffee_admin/model/shop.dart';
 import 'package:coffee_admin/service/auth.dart';
 import 'package:coffee_admin/model/customer.dart';
+import 'package:coffee_admin/ui/customer_page.dart';
+import 'package:coffee_admin/ui/scanner_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,8 +36,12 @@ class CoffeeStampsAdmin extends StatelessWidget {
         )
       ],
       child: MaterialApp(
+        routes: {
+          '/': (context) => AuthenticationWrapper(),
+          '/customer': (context) => customer,
+        },
         theme: ThemeData.dark(),
-        home: AuthenticationWrapper(),
+        //home: AuthenticationWrapper(),
       ),
     );
   }

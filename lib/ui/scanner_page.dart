@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
 
+final scan = ScannerPage();
+
 class ScannerPage extends StatefulWidget {
   @override
   _ScannerPageState createState() => _ScannerPageState(callback: () => null);
@@ -79,7 +81,7 @@ class _ScannerPageState extends State<ScannerPage> {
           print("get customer: $customer");
           customerBloc.customer = customer;
           // TODO: add navigation callback to scanpage
-          DefaultTabController.of(context)?.animateTo(1);
+          Navigator.of(context).pushNamed('/customer');
         });
       });
     } catch (error) {

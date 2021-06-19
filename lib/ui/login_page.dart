@@ -118,7 +118,15 @@ class _LoginPageState extends State<LoginPage> {
       ),
     ];
 
-    return Scaffold(
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: AssetImage('assets/images/background.jpeg'),
+        ),
+      ),
+      child: Scaffold(
+                backgroundColor: Colors.transparent,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -136,7 +144,9 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+    ),
     );
+  
   }
 }
 

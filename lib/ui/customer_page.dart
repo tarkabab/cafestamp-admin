@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
+final customer = CustomerPage();
+
 class CustomerPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => CustomerPageState();
@@ -41,11 +43,22 @@ class _CustomerCardState extends State<CustomerCard> {
     final customerBloc = Provider.of<CustomerBloc>(context);
 
     if (customerBloc.customer == null) {
-      return Center(
-        child: Text(
-          "Customer not found!",
-          style: TextStyle(fontSize: 20),
+      return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/background.jpeg"),
+              fit: BoxFit.fill),
         ),
+        padding: EdgeInsets.symmetric(vertical: 50, horizontal: 50),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Customer not found!",
+                style: TextStyle(fontSize: 25),
+              ),
+            ]),
       );
     } else {
       return Container(
